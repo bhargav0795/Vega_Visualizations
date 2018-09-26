@@ -1,0 +1,99 @@
+{
+  "$schema": "https://vega.github.io/schema/vega/v4.json",
+  "width": 1000,
+  "height": 800,
+  "padding": 5,
+
+  "data": [
+    {
+      "name": "loss_table",
+      "url": "https://raw.githubusercontent.com/bhargav0795/Vega_Visualizations/master/losses2015_transformed.csv",
+      "format": {"type": "csv", "parse": "auto"},
+      "transform": [
+        {"type": "aggregate",
+         "groupby": ["Damage_Descp"],
+         "ops": ["sum"],
+         "fields": ["Amount"],
+          "as": ["Amount"]
+
+        }
+          ]
+    }
+  ],
+
+  "signals": [
+    {
+      "name": "tooltip",
+      "value": {},
+      "on": [
+        {"events": "rect:mouseover", "update": "datum"},
+        {"events": "rect:mouseout",  "update": "{}"}
+      ]
+    }
+  ],
+
+  "scales": [
+    {
+      "name": "xscale",
+      "domain": {"data": "loss_table", "field": "Amount"},
+      "range": "width",
+      "padding":0.1,
+      "round": true
+    },
+    {
+      "name": "yscale",
+      "domain": {"data": "loss_table", "field": "Damage_Descp","sort": {"op": "max", "field": "Amount", "order": "ascending"}},
+       "type": "band",
+      "range": "height",
+      "padding": 0.5
+
+    }
+  ],
+
+  "axes": [
+    { "orient": "bottom", "scale": "xscale" },
+    { "orient": "left", "scale": "yscale" }
+  ],
+
+  "marks": [
+    {
+      "type": "rect",
+      "from": {"data":"loss_table"},
+      "encode": {
+        "enter": {
+          "x": {"scale": "xscale", "value": 0},
+          "x2": {"scale": "xscale", "field": "Amount"},
+          "y": {"scale": "yscale", "field": "Damage_Descp"},
+          "height": {"scale": "yscale", "band": 1}
+        },
+
+        "hover": {
+          "fill": {"value": "green"}
+        },
+        "update": {
+          "fill": {"value": "blue"}
+        }
+      }
+    },
+    {
+      "type": "text",
+      "encode": {
+        "enter": {
+          "align": {"value": "center"},
+          "baseline": {"value": "bottom"},
+          "fill": {"value": "#333"}
+        },
+        "update": {
+          "x": {"scale": "xscale", "signal": "tooltip.Amount", "band": 1},
+          "y": {"scale": "yscale", "signal": "tooltip.Damage_Descp", "offset": -2},
+          "text": {"signal": "tooltip.Amount"},
+          "fillOpacity": [
+            {"test": "datum === tooltip", "value": 0},
+            {"value": 1}
+          ]
+        }
+      }
+    }
+
+  ]
+}
