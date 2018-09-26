@@ -10,3 +10,5 @@ used to generate the two views.
 
 The following two data files are provided: us-10m.json – containing state boundaries, and
 losses2015_transformed.csv – containing the 2015 indemnities per state.
+
+Tableau : https://public.tableau.com/profile/bhargav.nallani.c#!/vizhome/AgriculturalLoss2015/AgriculturalLosses?publish=yes
