@@ -7,7 +7,7 @@
   "data": [
     {
       "name": "loss_table",
-      "url": "https://raw.githubusercontent.com/bhargav0795/Vega_Visualizations/master/losses2015_transformed.csv",
+      "url": "https://raw.githubusercontent.com/bhargav0795/Vega_Visualizations/master/Data/losses2015_transformed.csv",
       "format": {"type": "csv", "parse": "auto"},
       "transform": [
         {"type": "aggregate",
