@@ -1,0 +1,74 @@
+{
+ "$schema": "https://vega.github.io/schema/vega/v4.json",
+ "width": 1000,
+ "height": 500,
+ "autosize": "none",
+
+ "data": [
+   {
+     "name": "loss_table",
+     "url": "https://raw.githubusercontent.com/bhargav0795/Vega_Visualizations/master/Data/losses2015_transformed.csv",
+     "format": {"type": "csv", "parse": "auto"},
+     "transform": [
+        {"type": "aggregate",
+         "groupby": ["State_Code"],
+         "ops": ["sum"],
+         "fields": ["Amount"],
+          "as": ["Amount"]
+
+        }
+          ]
+   },
+   {
+     "name": "states_table",
+     "url": "https://raw.githubusercontent.com/bhargav0795/Vega_Visualizations/master/Data/us-10m.json",
+     "format": {"type": "topojson", "feature": "states"},
+     "transform": [
+       {  "type": "lookup", "from": "loss_table", "key": "State_Code", "fields": ["id"], "values": ["Amount","State_Abv"] },
+       { "type": "filter", "expr": "datum.Amount != null" }
+
+     ]
+   }
+ ],
+
+ "projections": [
+   {
+     "name": "projection",
+     "type": "albersUsa"
+   }
+ ],
+
+ "scales": [
+   {
+     "name": "color",
+     "type": "quantize",
+     "domain": [0, 150000000],
+     "range": {"scheme": "blues","count" : 20}
+   }
+ ],
+
+"legends": [
+   {
+     "fill": "color",
+     "orient": "bottom-right",
+     "direction": "horizontal",
+     "title": "Total Damages(Sum)",
+     "strokeWidth": {"value": 5}
+   }
+ ],
+
+ "marks": [
+   {
+     "type": "shape",
+     "from": {"data": "states_table"},
+     "encode": {
+       "enter": { "tooltip": {"signal": "datum.Amount"}},
+       "update": { "fill": {"scale": "color", "field": "Amount"} },
+       "hover": { "fill": {"value": "green"} }
+     },
+     "transform": [
+       { "type": "geoshape", "projection": "projection" }
+     ]
+   }
+ ]
+}
